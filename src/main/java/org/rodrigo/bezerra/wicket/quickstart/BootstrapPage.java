@@ -6,10 +6,10 @@
 
 package org.rodrigo.bezerra.wicket.quickstart;
 
-import org.apache.wicket.bootstrap.Bootstrap;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.rodrigo.bezerra.wicket.quickstart.menu.MenuPanel;
 
 
 /**
@@ -18,17 +18,19 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class BootstrapPage extends WebPage {
     public BootstrapPage() {
-        
+        this(null);
     }
     
     public BootstrapPage(PageParameters parameters) {
         super(parameters);
+        
+        add(new MenuPanel("menuPanel"));
     }
     
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         
-        Bootstrap.renderHeadResponsive(response);
+//        Bootstrap.renderHeadResponsive(response);
     }
 }

@@ -17,6 +17,8 @@
 package org.rodrigo.bezerra.wicket.quickstart.panel;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.rodrigo.bezerra.wicket.quickstart.Session;
+import org.rodrigo.bezerra.wicket.quickstart.WicketApplication;
 
 /**
  *
@@ -26,5 +28,14 @@ public class BasePanel extends Panel{
 
     public BasePanel(String id) {
         super(id);
+    }
+
+    @Override
+    public Session getSession() {
+        return (Session)super.getSession(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public WicketApplication getWebApplication() {
+        return (WicketApplication)getApplication();
     }
 }

@@ -14,45 +14,37 @@
  * limitations under the License.
  */
 
-package org.rodrigo.bezerra.wicket.quickstart.menu;
+package org.rodrigo.bezerra.wicket.quickstart.sitemap;
 
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.rodrigo.bezerra.wicket.quickstart.BootstrapPage;
+import org.rodrigo.bezerra.wicket.quickstart.page.Order;
+import org.rodrigo.bezerra.wicket.quickstart.page.PageLabel;
 import org.rodrigo.bezerra.wicket.quickstart.page.PageManager;
 import org.rodrigo.bezerra.wicket.quickstart.page.PageModel;
-import org.rodrigo.bezerra.wicket.quickstart.panel.BasePanel;
+import org.rodrigo.bezerra.wicket.quickstart.page.Url;
 
 /**
  *
  * @author rodrigo
  */
-public class MenuPanel extends BasePanel{
+@Url("/sitemap.html")
+@PageLabel("Sitemap")
+@Order(PageModel.MenuOrder.PRIMARY)
+public class SitemapPage extends BootstrapPage {
 
-    public MenuPanel(String id) {
-        super(id);
+    public SitemapPage() {
         
-        setRenderBodyOnly(true);
-        
-        add(new ListView<PageModel>("menuItemsListView", PageManager.getInstance().getPages()) {
-//        add(new ListView<PageModel>("menuItemsListView", new ArrayList()) {
+        add(new ListView<PageModel>("pagesListView", PageManager.getInstance().getPages()) {
 
             @Override
             protected void populateItem(ListItem<PageModel> li) {
-                PageModel selectedPageModel = MenuPanel.this.getSession().getSelectedPageModel();
-                WebMarkupContainer linkContainer = new WebMarkupContainer("linkContainer");
-                
-                if (selectedPageModel != null && selectedPageModel.equals(li.getModelObject())) {
-                    linkContainer.add(new AttributeAppender("class", "active"));
-                }
-                
-                linkContainer.add(new BookmarkablePageLink("pageLink", li.getModelObject().getPageClass())
+                // TODO: Separate into different groups by parent page
+                li.add(new BookmarkablePageLink("pageLink", li.getModelObject().getPageClass())
                         .add(new Label("pageLabel", li.getModelObject().getLabel())));
-                
-                li.add(linkContainer);
             }
         });
     }

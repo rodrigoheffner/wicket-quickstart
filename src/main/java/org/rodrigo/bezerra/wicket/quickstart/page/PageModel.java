@@ -16,11 +16,14 @@
 
 package org.rodrigo.bezerra.wicket.quickstart.page;
 
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+
 /**
  *
  * @author rodrigo
  */
-public class PageModel {
+public class PageModel implements Serializable {
     public enum MenuOrder {
         PRIMARY, SECONDARY
     }
@@ -31,13 +34,13 @@ public class PageModel {
     private Class pageClass;
 
     public PageModel(Class page) {
-        this.url = page.getClass().getAnnotation(Url.class).value();
-        this.label = page.getClass().getAnnotation(PageLabel.class).value();
-        this.menuOrder = page.getClass().getAnnotation(Order.class).value();
+        this.url = ((Url)page.getAnnotation(Url.class)).value();
+        this.label = ((PageLabel)page.getAnnotation(PageLabel.class)).value();
+        this.menuOrder = ((Order)page.getAnnotation(Order.class)).value();
         this.pageClass = page;
         
-        if (page.getClass().getAnnotation(Parent.class) != null) {
-            parent = page.getClass().getAnnotation(Parent.class).value();
+        if (((Parent)page.getAnnotation(Parent.class)) != null) {
+            parent = ((Parent)page.getAnnotation(Parent.class)).value();
         }
     }
 

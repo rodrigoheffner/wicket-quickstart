@@ -28,8 +28,8 @@ import org.rodrigo.bezerra.wicket.quickstart.page.PageModel.MenuOrder;
  *
  * @author rodrigo
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.PACKAGE, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Target( { ElementType.TYPE })
 @Documented
 @Inherited
 public @interface Order {

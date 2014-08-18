@@ -19,6 +19,7 @@ package org.rodrigo.bezerra.wicket.quickstart.page;
 import java.util.ArrayList;
 import java.util.List;
 import org.rodrigo.bezerra.wicket.quickstart.HomePage;
+import org.rodrigo.bezerra.wicket.quickstart.sitemap.SitemapPage;
 
 /**
  *
@@ -29,7 +30,10 @@ public class PageManager {
     private List<PageModel> pages = new ArrayList<PageModel>();
     
     private PageManager() {
-//        pages.add(new PageModel(HomePage.class));
+        pages.add(new PageModel(HomePage.class));
+        pages.add(new PageModel(SitemapPage.class));
+        
+        // TODO: Set parent in page models
     }
     
     public static PageManager getInstance() {

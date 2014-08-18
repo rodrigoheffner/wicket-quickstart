@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
  *
  * @author rodrigo
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.PACKAGE, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Target( { ElementType.TYPE })
 @Documented
 @Inherited
 public @interface Url {
