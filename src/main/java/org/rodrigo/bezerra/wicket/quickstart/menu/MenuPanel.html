@@ -1,21 +1,33 @@
 <wicket:panel>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Wicket Quickstart</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav" wicket:id="menuItemsListView">
-                    <li wicket:id="linkContainer"><a wicket:id="pageLink" href="#"><span wicket:id="pageLabel"></span></a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Wicket Quickstart</a>
         </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li wicket:id="menuItemsListView">
+                    <a wicket:id="pageLink" href="#">
+                        <span wicket:id="pageLabel"></span>
+                        <span class="caret" wicket:id="caretContainer"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <wicket:container wicket:id="dropdownMenu">
+                            <li>
+                                <a wicket:id="pageLink">
+                                    <span wicket:id="pageLabel"></span>
+                                </a>
+                            </li>
+                        </wicket:container>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
 
     <div style="height:50px"></div>

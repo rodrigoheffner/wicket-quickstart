@@ -17,7 +17,8 @@
 package org.rodrigo.bezerra.wicket.quickstart.page;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -32,6 +33,7 @@ public class PageModel implements Serializable {
     private MenuOrder menuOrder;
     private Class parent;
     private Class pageClass;
+    private List<PageModel> children = new ArrayList<PageModel>();
 
     public PageModel(Class page) {
         this.url = ((Url)page.getAnnotation(Url.class)).value();
@@ -82,5 +84,13 @@ public class PageModel implements Serializable {
 
     public void setPageClass(Class pageClass) {
         this.pageClass = pageClass;
+    }
+
+    public List<PageModel> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<PageModel> children) {
+        this.children = children;
     }
 }

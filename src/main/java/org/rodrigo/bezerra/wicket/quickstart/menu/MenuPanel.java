@@ -13,47 +13,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.rodrigo.bezerra.wicket.quickstart.menu;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.rodrigo.bezerra.wicket.quickstart.page.PageManager;
 import org.rodrigo.bezerra.wicket.quickstart.page.PageModel;
+import org.rodrigo.bezerra.wicket.quickstart.page.PageModel.MenuOrder;
 import org.rodrigo.bezerra.wicket.quickstart.panel.BasePanel;
 
 /**
  *
  * @author rodrigo
  */
-public class MenuPanel extends BasePanel{
+public class MenuPanel extends BasePanel {
 
     public MenuPanel(String id) {
         super(id);
-        
+
         setRenderBodyOnly(true);
-        
+
         add(new ListView<PageModel>("menuItemsListView", PageManager.getInstance().getPages()) {
 //        add(new ListView<PageModel>("menuItemsListView", new ArrayList()) {
 
             @Override
-            protected void populateItem(ListItem<PageModel> li) {
+            protected void populateItem(final ListItem<PageModel> li) {
+                final PageModel pageModel = li.getModelObject();
+                final boolean hasChildren = !pageModel.getChildren().isEmpty();
+
                 PageModel selectedPageModel = MenuPanel.this.getSession().getSelectedPageModel();
-                WebMarkupContainer linkContainer = new WebMarkupContainer("linkContainer");
-                
-                if (selectedPageModel != null && selectedPageModel.equals(li.getModelObject())) {
-                    linkContainer.add(new AttributeAppender("class", "active"));
+                li.setVisible(pageModel.getMenuOrder().equals(MenuOrder.PRIMARY));
+
+                if (selectedPageModel != null && selectedPageModel.equals(pageModel)) {
+                    li.add(new AttributeAppender("class", "active"));
                 }
+                WebMarkupContainer pageLink = new AjaxFallbackLink("pageLink") {
+
+                    @Override
+                    public void onClick(AjaxRequestTarget art) {
+                        MenuPanel.this.getSession().setSelectedPageModel(pageModel);
+                        setResponsePage(pageModel.getPageClass());
+                    }
+                };
+
+                if (hasChildren) {
+                    pageLink = new WebMarkupContainer("pageLink");
+                    pageLink.add(new AttributeModifier("class", "dropdown-toggle"));
+                    pageLink.add(new AttributeModifier("data-toggle", "dropdown"));
+                    li.add(new AttributeAppender("class", " dropdown"));
+                    pageLink.add(new AttributeModifier("href", "#"));
+                }
+
+                pageLink.add(new Label("pageLabel", pageModel.getLabel()));
+                pageLink.add(new WebMarkupContainer("caretContainer").setVisible(hasChildren));
+                li.add(pageLink);
                 
-                linkContainer.add(new BookmarkablePageLink("pageLink", li.getModelObject().getPageClass())
-                        .add(new Label("pageLabel", li.getModelObject().getLabel())));
-                
-                li.add(linkContainer);
+                li.add(new ListView<PageModel>("dropdownMenu", pageModel.getChildren()) {
+
+                    @Override
+                    protected void populateItem(final ListItem<PageModel> childListItem) {
+                        childListItem.setRenderBodyOnly(true);
+                        childListItem.add(new AjaxFallbackLink("pageLink") {
+
+                            @Override
+                            public void onClick(AjaxRequestTarget art) {
+                                MenuPanel.this.getSession().setSelectedPageModel(childListItem.getModelObject());
+                                setResponsePage(childListItem.getModelObject().getPageClass());
+                            }
+                        }.add(new Label("pageLabel", childListItem.getModelObject().getLabel())));
+                    }
+                }.setVisible(hasChildren));
             }
-        });
+        }.setRenderBodyOnly(true));
     }
 }

@@ -13,38 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.rodrigo.bezerra.wicket.quickstart.page;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.rodrigo.bezerra.wicket.quickstart.HomePage;
 import org.rodrigo.bezerra.wicket.quickstart.sitemap.SitemapPage;
+import org.rodrigo.bezerra.wicket.quickstart.test.TestFirstChildPage;
+import org.rodrigo.bezerra.wicket.quickstart.test.TestParentPage;
+import org.rodrigo.bezerra.wicket.quickstart.test.TestSecondChildPage;
 
 /**
  *
  * @author rodrigo
  */
 public class PageManager {
+
     private static PageManager manager;
-    private List<PageModel> pages = new ArrayList<PageModel>();
-    
+    private static List<PageModel> pages = new ArrayList<PageModel>();
+
     private PageManager() {
         pages.add(new PageModel(HomePage.class));
         pages.add(new PageModel(SitemapPage.class));
+        pages.add(new PageModel(TestParentPage.class));
+        pages.add(new PageModel(TestFirstChildPage.class));
+        pages.add(new PageModel(TestSecondChildPage.class));
         
-        // TODO: Set parent in page models
+        for (PageModel pageModel : pages) {
+            if (pageModel.getParent() != null) {
+                getPageModel(pageModel.getParent()).getChildren().add(pageModel);
+            }
+        }
     }
-    
+
     public static PageManager getInstance() {
         if (manager == null) {
             manager = new PageManager();
         }
-        
+
         return manager;
     }
 
     public List<PageModel> getPages() {
         return pages;
+    }
+
+    public static PageModel getPageModel(Class className) {
+        PageModel targetPageModel = null;
+
+        for (PageModel pageModel : pages) {
+            if (pageModel.getPageClass().equals(className)) {
+                targetPageModel = pageModel;
+                break;
+            }
+        }
+        
+        return targetPageModel;
     }
 }

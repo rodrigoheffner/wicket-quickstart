@@ -19,6 +19,7 @@ package org.rodrigo.bezerra.wicket.quickstart;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
+import org.rodrigo.bezerra.wicket.quickstart.page.PageManager;
 import org.rodrigo.bezerra.wicket.quickstart.page.PageModel;
 
 /**
@@ -27,7 +28,7 @@ import org.rodrigo.bezerra.wicket.quickstart.page.PageModel;
  */
 public class Session extends AuthenticatedWebSession{
 
-    private PageModel selectedPageModel;
+    private PageModel selectedPageModel = PageManager.getInstance().getPages().get(0);
     
     public Session(Request request) {
         super(request);
