@@ -16,8 +16,10 @@
 package org.rodrigo.bezerra.wicket.quickstart.page;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.rodrigo.bezerra.wicket.quickstart.HomePage;
+import org.rodrigo.bezerra.wicket.quickstart.page.PageModel.MenuOrder;
 import org.rodrigo.bezerra.wicket.quickstart.sitemap.SitemapPage;
 import org.rodrigo.bezerra.wicket.quickstart.test.TestFirstChildPage;
 import org.rodrigo.bezerra.wicket.quickstart.test.TestParentPage;
@@ -34,10 +36,12 @@ public class PageManager {
 
     private PageManager() {
         pages.add(new PageModel(HomePage.class));
-        pages.add(new PageModel(SitemapPage.class));
         pages.add(new PageModel(TestParentPage.class));
         pages.add(new PageModel(TestFirstChildPage.class));
         pages.add(new PageModel(TestSecondChildPage.class));
+        
+        // Leave the Sitemap page as the last page model, so it's always displayed as the rightmost menu item
+        pages.add(new PageModel(SitemapPage.class));
         
         for (PageModel pageModel : pages) {
             if (pageModel.getParent() != null) {
@@ -56,6 +60,22 @@ public class PageManager {
 
     public List<PageModel> getPages() {
         return pages;
+    }
+    
+    public List<List<PageModel>> getPagesByParent() {
+        List<List<PageModel>> pagesByParent = new ArrayList<List<PageModel>>();
+
+        for (PageModel pageModel : pages) {
+            if (pageModel.getMenuOrder().equals(MenuOrder.PRIMARY)) {
+                List<PageModel> pageModelList = new ArrayList<PageModel>();
+                pageModelList.add(pageModel);
+                pageModelList.addAll(pageModel.getChildren());
+                
+                pagesByParent.add(pageModelList);
+            }
+        }
+        
+        return pagesByParent;
     }
 
     public static PageModel getPageModel(Class className) {

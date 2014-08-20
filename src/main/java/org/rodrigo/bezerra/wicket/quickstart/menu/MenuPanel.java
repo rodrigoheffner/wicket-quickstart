@@ -15,6 +15,8 @@
  */
 package org.rodrigo.bezerra.wicket.quickstart.menu;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -39,15 +41,14 @@ public class MenuPanel extends BasePanel {
 
         setRenderBodyOnly(true);
 
+        final PageModel selectedPageModel = MenuPanel.this.getSession().getSelectedPageModel();
+        
         add(new ListView<PageModel>("menuItemsListView", PageManager.getInstance().getPages()) {
-//        add(new ListView<PageModel>("menuItemsListView", new ArrayList()) {
-
             @Override
             protected void populateItem(final ListItem<PageModel> li) {
                 final PageModel pageModel = li.getModelObject();
                 final boolean hasChildren = !pageModel.getChildren().isEmpty();
 
-                PageModel selectedPageModel = MenuPanel.this.getSession().getSelectedPageModel();
                 li.setVisible(pageModel.getMenuOrder().equals(MenuOrder.PRIMARY));
 
                 if (selectedPageModel != null && selectedPageModel.equals(pageModel)) {
@@ -73,20 +74,30 @@ public class MenuPanel extends BasePanel {
                 pageLink.add(new Label("pageLabel", pageModel.getLabel()));
                 pageLink.add(new WebMarkupContainer("caretContainer").setVisible(hasChildren));
                 li.add(pageLink);
+
+                List<PageModel> childrenPageModels = new ArrayList<PageModel>();
+                childrenPageModels.add(pageModel);
+                childrenPageModels.addAll(pageModel.getChildren());
                 
-                li.add(new ListView<PageModel>("dropdownMenu", pageModel.getChildren()) {
+                li.add(new ListView<PageModel>("dropdownMenu", childrenPageModels) {
 
                     @Override
                     protected void populateItem(final ListItem<PageModel> childListItem) {
                         childListItem.setRenderBodyOnly(true);
-                        childListItem.add(new AjaxFallbackLink("pageLink") {
+                        boolean isParentPageModel = pageModel.equals(childListItem.getModelObject());
+                        
+                        childListItem.add(new WebMarkupContainer("divider").setVisible(isParentPageModel));
+                        
+                        final AjaxFallbackLink dropDownLink = new AjaxFallbackLink("pageLink") {
 
                             @Override
                             public void onClick(AjaxRequestTarget art) {
                                 MenuPanel.this.getSession().setSelectedPageModel(childListItem.getModelObject());
                                 setResponsePage(childListItem.getModelObject().getPageClass());
                             }
-                        }.add(new Label("pageLabel", childListItem.getModelObject().getLabel())));
+                        };
+                        dropDownLink.add(new Label("pageLabel", childListItem.getModelObject().getLabel()));
+                        childListItem.add(dropDownLink);
                     }
                 }.setVisible(hasChildren));
             }

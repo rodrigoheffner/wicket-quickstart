@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.rodrigo.bezerra.wicket.quickstart.sitemap;
 
+import java.util.List;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -37,14 +37,19 @@ import org.rodrigo.bezerra.wicket.quickstart.page.Url;
 public class SitemapPage extends BootstrapPage {
 
     public SitemapPage() {
-        
-        add(new ListView<PageModel>("pagesListView", PageManager.getInstance().getPages()) {
 
+        add(new ListView<List<PageModel>>("pageGroupListView", PageManager.getInstance().getPagesByParent()) {
             @Override
-            protected void populateItem(ListItem<PageModel> li) {
-                // TODO: Separate into different groups by parent page
-                li.add(new BookmarkablePageLink("pageLink", li.getModelObject().getPageClass())
-                        .add(new Label("pageLabel", li.getModelObject().getLabel())));
+            protected void populateItem(ListItem<List<PageModel>> li) {
+                li.add(new ListView<PageModel>("pagesListView", li.getModelObject()) {
+
+                    @Override
+                    protected void populateItem(ListItem<PageModel> item) {
+                        // TODO: Separate into different groups by parent page
+                        item.add(new BookmarkablePageLink("pageLink", item.getModelObject().getPageClass())
+                                .add(new Label("pageLabel", item.getModelObject().getLabel())));
+                    }
+                });
             }
         });
     }
